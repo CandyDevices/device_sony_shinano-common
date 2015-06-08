@@ -7,43 +7,8 @@ vendor/lib/soundfx/libqcbassboost.so
 vendor/lib/soundfx/libqcreverb.so
 vendor/lib/soundfx/libqcvirt.so
 
-# Audio BLOBS
-lib/libaudioroute.so
-lib/libtinyalsa.so
-lib/soundfx/libqcomvisualizer.so
-vendor/etc/effect_init_params
-vendor/lib/liblistenhardware.so
-
-# ACDB
-etc/acdbdata/Fluid/Fluid_Bluetooth_cal.acdb
-etc/acdbdata/Fluid/Fluid_General_cal.acdb
-etc/acdbdata/Fluid/Fluid_Global_cal.acdb
-etc/acdbdata/Fluid/Fluid_Handset_cal.acdb
-etc/acdbdata/Fluid/Fluid_Hdmi_cal.acdb
-etc/acdbdata/Fluid/Fluid_Headset_cal.acdb
-etc/acdbdata/Liquid/Liquid_Bluetooth_cal.acdb
-etc/acdbdata/Liquid/Liquid_General_cal.acdb
-etc/acdbdata/Liquid/Liquid_Global_cal.acdb
-etc/acdbdata/Liquid/Liquid_Hdmi_cal.acdb
-etc/acdbdata/Liquid/Liquid_Headset_cal.acdb
-etc/acdbdata/MTP/MTP_Bluetooth_cal.acdb
-etc/acdbdata/MTP/MTP_General_cal.acdb
-etc/acdbdata/MTP/MTP_Global_cal.acdb
-etc/acdbdata/MTP/MTP_Hdmi_cal.acdb
-etc/acdbdata/MTP/MTP_Headset_cal.acdb
-
 # ADSP
 vendor/lib/libadsprpc.so
-
-# Bluetooth
-etc/firmware/BCM4339.hcd
-bin/btnvtool
-bin/hci_qcomm_init
-vendor/lib/libbtnv.so
-
-# Bluetooth BLOBS
-lib/libbt-hci.so
-vendor/lib/libbt-vendor.so
 
 # Camera
 bin/mm-qcamera-daemon
@@ -54,9 +19,13 @@ lib/hw/camera.qcom.so:lib/hw/camera.vendor.qcom.so
 lib/libals.so
 lib/libcamera_clientsemc.so
 lib/libcammw.so
+lib/libidd.so
+lib/liblights-core.so
 lib/libmmcamera_interface.so
 lib/libmmjpeg_interface.so
+lib/libprotobuf-c.so
 lib/libqomx_core.so
+lib/libsys-utils.so
 vendor/lib/libfastcvopt.so
 vendor/lib/libjpegdhw.so
 vendor/lib/libjpegehw.so
@@ -205,16 +174,25 @@ etc/firmware/venus.b04
 etc/firmware/venus.mbn
 etc/firmware/venus.mdt
 
-# CPU
-bin/mpdecision
-vendor/lib/libqc-opt.so
-
-# FM
-bin/fmconfig
-bin/fm_qsoc_patches
+# DRM
+bin/qseecomd
+etc/permissions/com.google.widevine.software.drm.xml
+framework/com.google.widevine.software.drm.jar
+lib/libdrmdecrypt.so
+vendor/lib/libdrmdiag.so
+vendor/lib/libdrmfs.so
+vendor/lib/libdrmtime.so
+vendor/lib/libQSEEComAPI.so
+vendor/lib/librpmb.so
+vendor/lib/libssd.so
+vendor/lib/libwvdrm_L3.so
+vendor/lib/libwvm.so
+vendor/lib/libWVStreamControlAPI_L3.so
+vendor/lib/drm/libdrmwvmplugin.so
+vendor/lib/mediadrm/libwvdrmengine.so
 
 # GPS
--app/com.qualcomm.location.apk
+-app/com.qualcomm.location.apk:priv-app/com.qualcomm.location/com.qualcomm.location.apk
 bin/gsiff_daemon
 etc/permissions/com.qualcomm.location.xml
 lib/libloc_api_v02.so
@@ -228,23 +206,11 @@ vendor/lib/libquipc_os_api.so
 vendor/lib/libquipc_ulp_adapter.so
 vendor/lib/libulp2.so
 
-# HDCP
-etc/firmware/tzhdcp.b00
-etc/firmware/tzhdcp.b01
-etc/firmware/tzhdcp.b02
-etc/firmware/tzhdcp.b03
-etc/firmware/tzhdcp.mdt
-
 # HW Config
 etc/pre_hw_config.sh
 
 # IRSC
 bin/irsc_util
-
-# Keylayout
-usr/keylayout/gpio-keys.kl
-usr/keylayout/mhl-rcp.kl
-usr/keylayout/msm8974-taiko-mtp-snd-card_Button_Jack.kl
 
 # Keystore
 vendor/firmware/keymaster/keymaster.b00
@@ -253,10 +219,6 @@ vendor/firmware/keymaster/keymaster.b02
 vendor/firmware/keymaster/keymaster.b03
 vendor/firmware/keymaster/keymaster.mdt
 
-# Lights
-lib/hw/lights.default.so:lib/hw/lights.vendor.default.so
-lib/liblights-core.so
-
 # Media config
 etc/media_profiles.xml
 
@@ -264,8 +226,8 @@ etc/media_profiles.xml
 bin/netmgrd
 bin/qmuxd
 bin/rmt_storage
-bin/sct_service
 lib/libpin-cache.so
+lib/libstartup-reason.so
 vendor/lib/libdiag.so
 vendor/lib/libdsi_netctrl.so
 vendor/lib/libdsnetutils.so
@@ -274,24 +236,12 @@ vendor/lib/libidl.so
 vendor/lib/libnetmgr.so
 vendor/lib/libril-qc-qmi-1.so
 
-# Modem firmware
-#etc/firmware/D6x02/mba.b00
-#etc/firmware/D6x02/modem.b01
-#etc/firmware/D6x02/modem.mdt
-etc/firmware/mba.b00
-etc/firmware/mba.mdt
-
 # Playready
 etc/firmware/cmnlib.b00
 etc/firmware/cmnlib.b01
 etc/firmware/cmnlib.b02
 etc/firmware/cmnlib.b03
 etc/firmware/cmnlib.mdt
-
-# Postproc
-bin/mm-pp-daemon
-vendor/lib/libmm-abl-oem.so
-vendor/lib/libmm-abl.so
 
 # QMI
 vendor/lib/libqcci_legacy.so
@@ -306,16 +256,8 @@ vendor/lib/libqmi_encdec.so
 vendor/lib/libqmiservices.so
 vendor/lib/libqmi.so
 
-# QSEECOM
-bin/qseecomd
-vendor/lib/libdrmdiag.so
-vendor/lib/libdrmfs.so
-vendor/lib/libdrmtime.so
-vendor/lib/libQSEEComAPI.so
-
 # Security
 lib/lib_asb_tee.so
-lib/libidd.so
 lib/libkeyctrl.so
 
 # Security firmware
@@ -339,50 +281,11 @@ etc/firmware/tzsuntory.mdt
 vendor/lib/hw/sensors.msm8974.so
 vendor/lib/libsensor_reg.so
 
-# Sysmon
-bin/system_monitor
-lib/libprotobuf-c.so
-lib/libsysmon_idd.so
-lib/libsysmon.so
-lib/libsys-utils.so
-lib/sysmon/sysmon_batt_therm.so
-lib/sysmon/sysmon_cam_therm0.so
-lib/sysmon/sysmon_charge_current_limit_level.so
-lib/sysmon/sysmon_charging.so
-lib/sysmon/sysmon_corelimit.so
-lib/sysmon/sysmon_dc_current_limit_value.so
-lib/sysmon/sysmon_emmc_therm.so
-lib/sysmon/sysmon_gpu_perflevel.so
-lib/sysmon/sysmon_lcd_brightness_level.so
-lib/sysmon/sysmon_modem_8974.so
-lib/sysmon/sysmon_msm_thermal_disable.so
-lib/sysmon/sysmon_msm_therm.so
-lib/sysmon/sysmon_pa_therm0.so
-lib/sysmon/sysmon_pa_therm1.so
-lib/sysmon/sysmon_perflevel.so
-lib/sysmon/sysmon_pm8941_tz.so
-lib/sysmon/sysmon_quiet_therm.so
-lib/sysmon/sysmon_test_sensor.so
-lib/sysmon/sysmon_tsens_interrupt.so
-lib/sysmon/sysmon_tsens_tz_sensor0.so
-lib/sysmon/sysmon_tsens_tz_sensor10.so
-lib/sysmon/sysmon_tsens_tz_sensor1.so
-lib/sysmon/sysmon_tsens_tz_sensor2.so
-lib/sysmon/sysmon_tsens_tz_sensor3.so
-lib/sysmon/sysmon_tsens_tz_sensor4.so
-lib/sysmon/sysmon_tsens_tz_sensor5.so
-lib/sysmon/sysmon_tsens_tz_sensor6.so
-lib/sysmon/sysmon_tsens_tz_sensor7.so
-lib/sysmon/sysmon_tsens_tz_sensor8.so
-lib/sysmon/sysmon_tsens_tz_sensor9.so
-lib/sysmon/sysmon_usb_current_limit_value.so
-lib/sysmon/sysmon_wlan_limit.so
-lib/sysmon/sysmon_xo_therm.so
-
 # TA
 bin/taimport
 bin/ta_param_loader
 bin/ta_qmi_service
+bin/mlog_qmi_service
 lib/libMiscTaAccessor.so
 lib/libmiscta.so
 lib/libta.so

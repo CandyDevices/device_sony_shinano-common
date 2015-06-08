@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-$(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
-
 # inherit from msm8974-common
 $(call inherit-product, device/sony/msm8974-common/msm8974.mk)
 
@@ -44,6 +42,7 @@ PRODUCT_COPY_FILES += \
     $(COMMON_PATH)/rootdir/fstab.qcom:root/fstab.qcom \
     $(COMMON_PATH)/rootdir/init.qcom.rc:root/init.qcom.rc \
     $(COMMON_PATH)/rootdir/init.recovery.qcom.rc:root/init.recovery.qcom.rc \
+    $(COMMON_PATH)/rootdir/init.sony.usb.rc:root/init.sony.usb.rc \
     $(COMMON_PATH)/rootdir/ueventd.qcom.rc:root/ueventd.qcom.rc
 
 # Recovery
@@ -52,9 +51,7 @@ PRODUCT_PACKAGES += \
 
 # Sbin
 PRODUCT_COPY_FILES += \
-    $(COMMON_PATH)/rootdir/charger:root/charger \
-    $(COMMON_PATH)/rootdir/sbin/wait4tad_static:root/sbin/wait4tad_static \
-    $(COMMON_PATH)/rootdir/sbin/tad_static:root/sbin/tad_static
+    $(COMMON_PATH)/rootdir/sbin/tad_static:system/bin/tad_static
 
 # ANT+
 PRODUCT_PACKAGES += \
@@ -63,39 +60,19 @@ PRODUCT_PACKAGES += \
     libantradio
 
 # Audio
-PRODUCT_PACKAGES += \
-    audiod \
-    audio.a2dp.default \
-    audio.primary.msm8974 \
-    audio.r_submix.default \
-    audio.usb.default \
-    audio_policy.msm8974
-
-PRODUCT_PACKAGES += \
-    libaudio-resampler \
-    libqcompostprocbundle \
-    libqcomvisualizer \
-    libqcomvoiceprocessing \
-    tinymix
-
-# Audio configuration
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/audio/audio_effects.conf:system/vendor/etc/audio_effects.conf
+    $(COMMON_PATH)/audio/audio_platform_info.xml:system/etc/audio_platform_info.xml
 
-# Display
 PRODUCT_PACKAGES += \
-    hwcomposer.msm8974 \
-    gralloc.msm8974 \
-    copybit.msm8974 \
-    memtrack.msm8974
+    tfa9890_amp
+
+# Bluetooth
+PRODUCT_COPY_FILES += \
+    $(COMMON_PATH)/bluetooth/bt_vendor.conf:system/etc/bluetooth/bt_vendor.conf
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
     e2fsck
-
-# FM Radio
-PRODUCT_COPY_FILES += \
-    $(COMMON_PATH)/rootdir/system/etc/init.qcom.fm.sh:system/etc/init.qcom.fm.sh
 
 # GPS
 PRODUCT_COPY_FILES += \
@@ -116,12 +93,18 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     keystore.msm8974
 
+# Keylayout
+PRODUCT_COPY_FILES += \
+    $(COMMON_PATH)/rootdir/system/usr/keylayout/gpio-keys.kl:system/usr/keylayout/gpio-keys.kl \
+    $(COMMON_PATH)/rootdir/system/usr/keylayout/mhl-rcp.kl:system/usr/keylayout/mhl-rcp.kl \
+    $(COMMON_PATH)/rootdir/system/usr/keylayout/msm8974-taiko-mtp-snd-card_Button_Jack.kl:system/usr/keylayout/msm8974-taiko-mtp-snd-card_Button_Jack.kl
+
 # NFC
 PRODUCT_PACKAGES += \
     NfcNci \
     Tag \
     com.android.nfc_extras \
-    nfc_nci.msm8974
+    nfc_nci.pn54x.default
 
 PRODUCT_COPY_FILES += \
     $(COMMON_PATH)/rootdir/system/etc/nfcee_access.xml:system/etc/nfcee_access.xml \
@@ -129,29 +112,17 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.nfc.hce.xml:system/etc/permissions/android.hardware.nfc.hce.xml \
     frameworks/native/data/etc/com.android.nfc_extras.xml:system/etc/permissions/com.android.nfc_extras.xml
 
-# Qualcomm Random Number Generator
+# Off mode charger
 PRODUCT_PACKAGES += \
-    qrngd \
-    qrngp
+    charger_res_images
 
 # USB
 PRODUCT_PACKAGES += \
     com.android.future.usb.accessory
 
-# Wifi
-PRODUCT_PACKAGES += \
-    libnetcmdiface
-
 # Set default USB interface
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     persist.sys.usb.config=mtp
-
-# We have enough storage space to hold precise GC data
-PRODUCT_TAGS += dalvik.gc.type-precise
-
-# Audio
-PRODUCT_PROPERTY_OVERRIDES += \
-    af.resampler.quality=4
 
 # Audio offload
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -192,19 +163,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.qualcomm.sensors.georv=true \
     ro.qc.sensors.max_geomag_rotvec=50
 
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.hwui.texture_cache_size=72 \
-    ro.hwui.layer_cache_size=48 \
-    ro.hwui.r_buffer_cache_size=8 \
-    ro.hwui.path_cache_size=32 \
-    ro.hwui.gradient_cache_size=1 \
-    ro.hwui.drop_shadow_cache_size=6 \
-    ro.hwui.texture_cache_flushrate=0.4 \
-    ro.hwui.text_small_cache_width=1024 \
-    ro.hwui.text_small_cache_height=1024 \
-    ro.hwui.text_large_cache_width=2048 \
-    ro.hwui.text_large_cache_height=1024
-
 # GPS
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.gps.qc_nlp_in_use=0 \
@@ -215,17 +173,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # HDMI
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.demo.hdmirotationlock=false
-
-# MDP
-PRODUCT_PROPERTY_OVERRIDES += \
-    debug.mdpcomp.logs=0 \
-    debug.mdpcomp.4k2kSplit=true
-
-# Radio
-ifneq ($(BOARD_HAVE_RADIO),false)
-    DEVICE_PACKAGE_OVERLAYS += $(COMMON_PATH)/overlay-radio
-    $(call inherit-product, $(COMMON_PATH)/radio.mk)
-endif
 
 # Time
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -240,12 +187,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.debug.wfd.enable=1 \
     persist.sys.wfd.virtual=0
 
-# Camera
-PRODUCT_PACKAGES += \
-    CameraWorkaround
-
 # BCM Wifi
-$(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4339/device-bcm.mk)
+$(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/config/config-bcm.mk)
+
+# HWUI memory limits
+$(call inherit-product, frameworks/native/build/phone-xxhdpi-2048-hwui-memory.mk)
 
 # Include non-opensource parts
 $(call inherit-product, vendor/sony/shinano-common/shinano-common-vendor.mk)
